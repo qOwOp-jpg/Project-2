@@ -4,6 +4,38 @@ const audio=$('audio');audio.volume=.8;
 let tracks=[],current=-1,shuffle=false,repeat=0,dragIndex=null;
 let ctx=null,analyser=null,source=null,frequency=null;
 const metrics={bass:0,mid:0,treble:0};
+let reactivity=1;
+$('reactivity').addEventListener('input',e=>{reactivity=Number(e.target.value)/100;$('reactivityValue').textContent=e.target.value+'%';});
+const spectrumCanvas=$('radialSpectrum'), spectrumCtx=spectrumCanvas.getContext('2d');
+let spectrumLevels=new Float32Array(96);
+function drawRadialSpectrum(now){
+  const dpr=Math.min(devicePixelRatio||1,2), rect=spectrumCanvas.getBoundingClientRect();
+  if(!rect.width||!rect.height)return;
+  const w=Math.round(rect.width*dpr),h=Math.round(rect.height*dpr);
+  if(spectrumCanvas.width!==w||spectrumCanvas.height!==h){spectrumCanvas.width=w;spectrumCanvas.height=h;}
+  const c=spectrumCtx;c.clearRect(0,0,w,h);c.save();c.translate(w/2,h/2);
+  const radius=Math.min(w,h)*.235, maxHeight=Math.min(w,h)*.17;
+  const active=!!(analyser&&!audio.paused&&!audio.ended);
+  const data=active?frequency:null;
+  // Stable icy-cyan bars with dark outlines: readable on both moon hemispheres.
+  const base='#b8e8f2';
+  const rot=now*.000055; // slow independent rotation, including pause
+  for(let i=0;i<spectrumLevels.length;i++){
+    const idx=data?Math.min(data.length-1,Math.round(3*Math.pow((i+1)/spectrumLevels.length,2)*Math.min(data.length-1)/3)):0;
+    const target=data?Math.pow(data[idx]/255,.85)*reactivity:0;
+    spectrumLevels[i]+=(target-spectrumLevels[i])*(target>spectrumLevels[i]?.24:.075);
+    const a=rot+i*Math.PI*2/spectrumLevels.length;
+    const level=spectrumLevels[i];
+    const len=Math.max(2*dpr, maxHeight*(.045+level*.9));
+    const x=Math.cos(a),y=Math.sin(a);
+    c.globalAlpha=.9;c.lineCap='round';
+    c.beginPath();c.moveTo(x*radius,y*radius);c.lineTo(x*(radius+len),y*(radius+len));
+    c.strokeStyle='#07111b';c.lineWidth=Math.max(3*dpr,Math.min(w,h)*.007);c.stroke();
+    c.strokeStyle=base;c.lineWidth=Math.max(1.5*dpr,Math.min(w,h)*.0037);c.stroke();
+  }
+  c.globalAlpha=.9;c.beginPath();c.arc(0,0,radius,0,Math.PI*2);c.strokeStyle='#07111b';c.lineWidth=3*dpr;c.stroke();c.strokeStyle=base;c.lineWidth=1.2*dpr;c.stroke();c.restore();
+}
+
 let lunar={phase:.5,illumination:100,name:'Full Moon',live:false};
 const clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,v));
 const fmt=t=>Number.isFinite(t)?`${Math.floor(t/60)}:${String(Math.floor(t%60)).padStart(2,'0')}`:'0:00';
@@ -29,7 +61,28 @@ const drop=$('dropZone');document.addEventListener('dragover',e=>{if(e.dataTrans
 const coords={lat:43.589,lng:-79.644};
 function localISODate(d=new Date()){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
 $('moonDate').value=localISODate();
-async function loadMoon(){const date=$('moonDate').value||localISODate();$('apiStatus').textContent='MOON DATA: FETCHING';try{const url=`https://api.sunrisesunset.io/json?lat=${coords.lat}&lng=${coords.lng}&date=${encodeURIComponent(date)}`;const response=await fetch(url);if(!response.ok)throw Error('HTTP '+response.status);const json=await response.json();if(!json.results||!['OK','INVALID_TZID'].includes(json.status))throw Error(json.status||'Bad response');const d=json.results;lunar={phase:clamp(Number(d.moon_phase_value)),illumination:clamp(Number(d.moon_illumination),0,100),name:d.moon_phase||'Unknown',live:true};$('phaseName').textContent=lunar.name;$('illumination').textContent=lunar.illumination.toFixed(1)+'%';$('moonrise').textContent=d.moonrise||'Not available';$('apiStatus').textContent='MOON DATA: LIVE JSON';drawMoon()}catch(e){lunar.live=false;$('apiStatus').textContent='MOON DATA: OFFLINE';$('phaseName').textContent='Demo: Full Moon';$('illumination').textContent='100% (demo)';$('moonrise').textContent='—';drawMoon();console.warn('Moon API unavailable:',e)}}
+// Phase shortcuts estimate the nearest date, then request authoritative API data.
+const lunarCycleDays=29.530588;
+function updatePhaseTimeline(){
+  document.querySelectorAll('[data-phase-target]').forEach(button=>{
+    const target=Number(button.dataset.phaseTarget);
+    const distance=Math.min(Math.abs(lunar.phase-target),1-Math.abs(lunar.phase-target));
+    button.classList.toggle('selected',distance<.055);
+  });
+}
+document.querySelectorAll('[data-phase-target]').forEach(button=>{
+  button.addEventListener('click',()=>{
+    const target=Number(button.dataset.phaseTarget);
+    let delta=(target-lunar.phase+1)%1;
+    if(delta>.5)delta-=1;
+    const [y,m,d]=$('moonDate').value.split('-').map(Number);
+    const utc=new Date(Date.UTC(y,m-1,d));
+    utc.setUTCDate(utc.getUTCDate()+Math.round(delta*lunarCycleDays));
+    $('moonDate').value=utc.toISOString().slice(0,10);
+    loadMoon();
+  });
+});
+async function loadMoon(){const date=$('moonDate').value||localISODate();$('apiStatus').textContent='MOON DATA: FETCHING';try{const url=`https://api.sunrisesunset.io/json?lat=${coords.lat}&lng=${coords.lng}&date=${encodeURIComponent(date)}`;const response=await fetch(url);if(!response.ok)throw Error('HTTP '+response.status);const json=await response.json();if(!json.results||!['OK','INVALID_TZID'].includes(json.status))throw Error(json.status||'Bad response');const d=json.results;lunar={phase:clamp(Number(d.moon_phase_value)),illumination:clamp(Number(d.moon_illumination),0,100),name:d.moon_phase||'Unknown',live:true};$('phaseName').textContent=lunar.name;$('illumination').textContent=lunar.illumination.toFixed(1)+'%';$('moonrise').textContent=d.moonrise||'Not available';$('apiStatus').textContent='MOON DATA: LIVE JSON';drawMoon();updatePhaseTimeline()}catch(e){lunar.live=false;$('apiStatus').textContent='MOON DATA: OFFLINE';$('phaseName').textContent='Demo: Full Moon';$('illumination').textContent='100% (demo)';$('moonrise').textContent='—';drawMoon();updatePhaseTimeline();console.warn('Moon API unavailable:',e)}}
 $('moonDate').onchange=loadMoon;$('refreshMoon').onclick=loadMoon;
 // Render the supplied PNG and its illumination into ONE canvas. This avoids
 // mismatched silhouettes caused by stacking a circular shadow over a textured PNG.
@@ -134,5 +187,5 @@ void main(){
   gl_FragColor=vec4(clamp(col,0.,1.),1.);
 }`;function compile(type,src){const s=gl.createShader(type);gl.shaderSource(s,src);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS))throw Error(gl.getShaderInfoLog(s));return s}try{shaderProgram=gl.createProgram();gl.attachShader(shaderProgram,compile(gl.VERTEX_SHADER,vertex));gl.attachShader(shaderProgram,compile(gl.FRAGMENT_SHADER,fragment));gl.linkProgram(shaderProgram);if(!gl.getProgramParameter(shaderProgram,gl.LINK_STATUS))throw Error('Shader linking failed');gl.useProgram(shaderProgram);const buf=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buf);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,-1,1,1,-1,1,1]),gl.STATIC_DRAW);const pos=gl.getAttribLocation(shaderProgram,'position');gl.enableVertexAttribArray(pos);gl.vertexAttribPointer(pos,2,gl.FLOAT,false,0,0);for(const name of ['resolution','time','bass','mid','treble','illum','phase'])uniforms[name]=gl.getUniformLocation(shaderProgram,name)}catch(e){console.error(e);gl=null;canvas.style.background='conic-gradient(#ff2388,#ffc24b,#00c6c8,#1254a8,#ff2388)'}}
 function bandAverage(lo,hi){if(!frequency||!ctx)return 0;const hz=ctx.sampleRate/analyser.fftSize;const a=Math.max(0,Math.floor(lo/hz)),b=Math.min(frequency.length,Math.ceil(hi/hz));let sum=0;for(let i=a;i<b;i++)sum+=frequency[i];return b>a?sum/(b-a)/255:0}
-let start=performance.now();function animate(now){if(analyser&&!audio.paused){analyser.getByteFrequencyData(frequency);metrics.bass+=(bandAverage(25,180)-metrics.bass)*.25;metrics.mid+=(bandAverage(180,2000)-metrics.mid)*.25;metrics.treble+=(bandAverage(2000,9000)-metrics.treble)*.25}else for(const k in metrics)metrics[k]*=.92;for(const k of ['bass','mid','treble'])$(k+'Bar').style.width=(metrics[k]*100).toFixed(1)+'%';if(gl){const dpr=Math.min(devicePixelRatio||1,1.5),w=Math.floor(innerWidth*dpr),h=Math.floor(innerHeight*dpr);if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;gl.viewport(0,0,w,h)}gl.useProgram(shaderProgram);gl.uniform2f(uniforms.resolution,w,h);gl.uniform1f(uniforms.time,(now-start)/1000);gl.uniform1f(uniforms.bass,metrics.bass);gl.uniform1f(uniforms.mid,metrics.mid);gl.uniform1f(uniforms.treble,metrics.treble);gl.uniform1f(uniforms.illum,lunar.illumination/100);gl.uniform1f(uniforms.phase,lunar.phase);gl.drawArrays(gl.TRIANGLES,0,6)}requestAnimationFrame(animate)}
+let start=performance.now();function animate(now){if(analyser&&!audio.paused){analyser.getByteFrequencyData(frequency);metrics.bass+=(bandAverage(25,180)-metrics.bass)*.25;metrics.mid+=(bandAverage(180,2000)-metrics.mid)*.25;metrics.treble+=(bandAverage(2000,9000)-metrics.treble)*.25}else for(const k in metrics)metrics[k]*=.92;for(const k of ['bass','mid','treble'])$(k+'Bar').style.width=(metrics[k]*100).toFixed(1)+'%';if(gl){const dpr=Math.min(devicePixelRatio||1,1.5),w=Math.floor(innerWidth*dpr),h=Math.floor(innerHeight*dpr);if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;gl.viewport(0,0,w,h)}gl.useProgram(shaderProgram);gl.uniform2f(uniforms.resolution,w,h);gl.uniform1f(uniforms.time,(now-start)/1000);gl.uniform1f(uniforms.bass,clamp(metrics.bass*reactivity));gl.uniform1f(uniforms.mid,clamp(metrics.mid*reactivity));gl.uniform1f(uniforms.treble,clamp(metrics.treble*reactivity));gl.uniform1f(uniforms.illum,lunar.illumination/100);gl.uniform1f(uniforms.phase,lunar.phase);gl.drawArrays(gl.TRIANGLES,0,6)}drawRadialSpectrum(now);requestAnimationFrame(animate)}
 loadMoon();drawMoon();requestAnimationFrame(animate);

@@ -52,3 +52,22 @@ header{background:rgba(6,8,17,.56)}
 
 /* v0.6: moon texture and shading now share the same canvas silhouette. */
 #moonStage .moon canvas{object-fit:contain;display:block;}
+
+/* v0.7 — circular sound spectrum centered on the fixed moon */
+#radialSpectrum{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(47vmin,490px);height:min(47vmin,490px);z-index:5;pointer-events:none;filter:drop-shadow(0 0 3px rgba(0,0,0,.35));}
+.reactivity-control{display:flex;align-items:center;gap:8px;margin-top:12px;padding:9px 0 3px;border-top:1px solid #ffffff2b;}
+.reactivity-control label{font:9px monospace;letter-spacing:1px;color:#f6bd65;white-space:nowrap;}
+.reactivity-control input{flex:1;min-width:45px;width:95px;}
+.reactivity-control output{min-width:35px;text-align:right;font:10px monospace;color:#f5f0e8;}
+@media(max-width:800px){#radialSpectrum{width:min(60vw,52vh);height:min(60vw,52vh);}.reactivity-control{flex-wrap:wrap;}}
+
+/* v0.9: high-contrast cool spectrum and interactive phase shortcuts */
+#radialSpectrum{width:min(61vmin,640px);height:min(61vmin,640px);filter:none;}
+.phase-timeline{margin-top:12px;padding-top:10px;border-top:1px solid #ffffff30;}
+.phase-timeline-title{font:9px monospace;letter-spacing:1px;color:#f6bd65;display:flex;justify-content:space-between;gap:5px;}
+.phase-timeline-title span{font-size:8px;color:#aab2c4;}
+.phase-timeline-buttons{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;margin-top:9px;}
+.phase-timeline-buttons button{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 2px;background:#ffffff0a;color:#cbd9e2;border:1px solid #ffffff30;border-radius:4px;font:9px monospace;cursor:pointer;}
+.phase-timeline-buttons button span{font-size:20px;line-height:1.2;}
+.phase-timeline-buttons button:hover,.phase-timeline-buttons button.selected{border-color:#b8e8f2;color:#b8e8f2;background:#b8e8f21a;}
+@media(max-width:800px){#radialSpectrum{width:min(72vw,62vh);height:min(72vw,62vh);}}
