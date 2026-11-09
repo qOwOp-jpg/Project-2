@@ -1,0 +1,54 @@
+:root{font-family:Inter,Arial,Helvetica,sans-serif;color:#f7f3ee;background:#070810;font-synthesis:none}*{box-sizing:border-box}body{margin:0;min-height:100vh}button,input{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible{outline:2px solid #ffbc54;outline-offset:3px}#swirl{position:fixed;inset:0;width:100%;height:100%;z-index:-3}.grain{pointer-events:none;position:fixed;inset:0;z-index:-2;background:linear-gradient(100deg,rgba(5,6,13,.91),rgba(5,6,13,.65) 52%,rgba(5,6,13,.7));}.shell{max-width:1260px;padding:28px 42px 20px;margin:auto}header,.header-right,.library-head,.library-actions,.player-top,.transport,.mode{display:flex;align-items:center;justify-content:space-between;gap:12px}header{border-bottom:1px solid #ffffff35;padding-bottom:17px;font:11px monospace;letter-spacing:2px;color:#bab9c9}.dot,.period{color:#ffcb52}.header-right button,.mode button,.transport button,.library-actions button{background:#ffffff0b;border:1px solid #ffffff38;color:white;border-radius:4px;padding:8px 12px}.header-right button:hover,.mode button:hover,.library-actions button:hover{background:#ffffff25}.hero{display:grid;grid-template-columns:1.25fr 1fr;min-height:510px;align-items:center;gap:28px}.tag{font:11px monospace;letter-spacing:2px;color:#f6bd65}.hero h1{font-size:clamp(44px,6.3vw,86px);line-height:.96;letter-spacing:-.075em;margin:18px 0 18px;font-weight:900}.hero h1 em{font-style:normal;background:linear-gradient(95deg,#fa2b8d,#ffc04c,#0fc1ce,#1864cc);color:transparent;background-clip:text}.hero-copy>p{color:#d0cad3;font-size:14px}.stats{display:flex;gap:24px;flex-wrap:wrap;margin-top:34px}.stats div{display:grid;gap:7px}.stats small,.date-control{font:10px monospace;letter-spacing:1.5px;color:#c0b8c9}.stats strong{font-size:17px}.date-control{display:flex;align-items:center;gap:12px;margin-top:28px}.date-control input{background:#0e101c;color:white;border:1px solid #ffffff4b;border-radius:4px;padding:7px}.api-link{font:11px monospace!important;color:#a7a4b5!important}.api-link a{color:#e9d5aa}.moon-area{min-height:390px;display:flex;align-items:center;justify-content:center;position:relative;flex-direction:column}.moon-halo{position:absolute;width:330px;height:330px;border-radius:50%;background:radial-gradient(circle,#f8e9bb24,#ed69aa0a 48%,transparent 70%);filter:blur(20px)}.moon{position:relative;width:min(30vw,315px);height:min(30vw,315px);min-width:220px;min-height:220px;border-radius:50%;overflow:hidden;box-shadow:0 0 50px #e1d7ff36,0 0 110px #fd3f9920;animation:float 8s ease-in-out infinite}.moon img,.moon canvas{position:absolute;inset:0;width:100%;height:100%;border-radius:50%}.moon img{object-fit:cover}.moon-caption{font:10px monospace;letter-spacing:3px;color:#c5c2d1;margin-top:28px}@keyframes float{50%{transform:translateY(-10px)}}.player,.library{background:#080a14df;border:1px solid #ffffff33;backdrop-filter:blur(12px);border-radius:8px;padding:24px;margin:12px 0}.player h2{font-size:25px;margin:12px 0 5px;overflow-wrap:anywhere}.player p{color:#b6b2c5;margin:0;font-size:13px}.mode button.active{border-color:#ffca63;color:#ffca63}.transport{margin-top:28px;gap:12px}.transport button{border:0;font-size:18px}.transport .play{width:51px;height:51px;border-radius:50%;background:#ffce67;color:#0a0910;font-size:20px}.transport span{font:12px monospace;color:#c8c5d1}input[type=range]{accent-color:#ffbb63;min-width:0}#seek{flex:1}#volume{width:85px}.meters{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:23px}.meters>div{height:26px;background:#ffffff13;position:relative;overflow:hidden;border-radius:2px}.meters span{position:absolute;z-index:2;font:10px monospace;letter-spacing:2px;left:8px;top:8px}.meters i{position:absolute;inset:0 auto 0 0;width:0;background:linear-gradient(90deg,#185cbd,#17bfc1,#ffb332,#f72b85);transition:width .07s}.library-head h2{font-size:18px;letter-spacing:2px}.library-head h2 span{color:#f4b966;font:12px monospace}.library-actions{flex-wrap:wrap}.library-actions button{font:11px monospace;letter-spacing:1px}.drop-zone{border:1px dashed #ffffff70;min-height:115px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:9px;text-align:center;padding:16px;margin:12px 0}.drop-zone strong{letter-spacing:2px;font-size:14px}.drop-zone span,.note{font:11px/1.6 monospace;color:#a9a7ba}.drop-zone.dragover{border-color:#ffce67;background:#ffce671c}.playlist{list-style:none;padding:0;margin:0}.playlist li{display:flex;align-items:center;gap:12px;border-bottom:1px solid #ffffff23;padding:12px 8px;cursor:grab}.playlist li.current{background:#ffce6712}.playlist li.dragging{opacity:.4}.playlist .handle{color:#a9a7ba;font-size:18px}.playlist .track-name{flex:1;min-width:0;overflow-wrap:anywhere}.playlist .track-name strong{display:block;font-size:13px}.playlist .track-name small{display:block;color:#aaa6b8;margin-top:4px}.playlist li button{background:transparent;color:#d6d2dd;border:0;font-size:16px}.playlist li button:hover{color:#ffc86b}.note{margin-bottom:0}footer{display:flex;justify-content:space-between;font:10px monospace;letter-spacing:1px;color:#9794a5;padding:20px 0 10px}@media(max-width:800px){.shell{padding:19px 16px}.hero{grid-template-columns:1fr;gap:0;padding-top:30px}.hero h1{font-size:clamp(43px,11vw,70px)}.moon-area{min-height:310px}.moon{width:240px;height:240px}.library-head{align-items:flex-start;flex-direction:column}.transport{flex-wrap:wrap}.transport #seek{flex-basis:48%}.volume-icon{margin-left:auto}.stats{gap:16px}header{font-size:9px;letter-spacing:1px}}@media(prefers-reduced-motion:reduce){.moon{animation:none}}
+
+/* v0.2: center the moon, minimize editorial copy, make the spectrum visible. */
+.grain{background:linear-gradient(180deg,rgba(4,5,12,.18),rgba(4,5,12,.04) 42%,rgba(4,5,12,.24));}
+.shell{max-width:1440px;padding:20px 32px 24px;position:relative}
+header{background:rgba(6,8,17,.64);padding:9px 12px;border-radius:5px;backdrop-filter:blur(5px)}
+.hero{display:flex;align-items:center;justify-content:center;min-height:min(76vh,720px);position:relative;padding:20px 0 65px;}
+.hero-copy{position:absolute;top:18px;left:0;z-index:4;max-width:340px;background:rgba(5,7,16,.72);border:1px solid #ffffff30;border-radius:8px;padding:15px 18px;backdrop-filter:blur(7px)}
+.hero h1{font-size:clamp(20px,2.25vw,30px);letter-spacing:-.04em;line-height:1.03;margin:8px 0 8px}
+.hero-copy>p{font-size:11px;margin:5px 0}
+.hero .tag{font-size:9px}
+.stats{gap:13px;margin-top:13px}
+.stats strong{font-size:12px}
+.stats small,.date-control{font-size:9px}
+.date-control{margin-top:13px}
+.api-link{font-size:9px!important}
+.moon-area{width:100%;min-height:0;z-index:1}
+.moon{width:clamp(310px,43vw,600px);height:clamp(310px,43vw,600px);min-width:0;min-height:0;box-shadow:0 0 70px #d5d2ff33,0 0 145px #e750ad20;animation:none}
+.moon-halo{width:min(60vw,730px);height:min(60vw,730px);filter:blur(24px)}
+.moon-caption{margin-top:18px;text-shadow:0 1px 5px #000}
+.player,.library{background:rgba(5,7,16,.88);backdrop-filter:blur(5px)}
+.player{margin-top:0}
+@media(max-width:800px){.shell{padding:12px}.hero{min-height:650px;padding-top:180px;padding-bottom:28px}.hero-copy{top:12px;left:0;right:0;max-width:none;padding:12px}.hero h1{font-size:25px}.moon{width:min(82vw,430px);height:min(82vw,430px)}.moon-halo{width:90vw;height:90vw}.moon-area{min-height:0}.stats{margin-top:10px}.date-control{margin-top:8px}}
+
+/* v0.3: larger moon, restrained color at rest, dark vignette in shader */
+.hero{min-height:min(87vh,850px);padding:14px 0 50px}
+.moon{width:clamp(390px,55vw,740px);height:clamp(390px,55vw,740px);background:#777e89;box-shadow:0 0 45px #cad0e833,0 0 110px #e750ad18}
+.moon-halo{width:min(72vw,850px);height:min(72vw,850px)}
+.moon img{filter:contrast(1.08) brightness(1.08)}
+.moon-caption{margin-top:13px}
+@media(max-width:800px){.hero{min-height:660px;padding-top:180px;padding-bottom:20px}.moon{width:min(91vw,520px);height:min(91vw,520px)}.moon-halo{width:98vw;height:98vw}}
+
+/* v0.4: the moon is a fixed viewport centerpiece, independent of scroll. */
+#moonStage{position:fixed!important;inset:0!important;width:100vw!important;height:100dvh!important;min-height:0!important;z-index:0!important;display:flex;align-items:center;justify-content:center;pointer-events:none;transform:none!important}
+#moonStage .moon{width:min(76vmin,800px)!important;height:min(76vmin,800px)!important;min-width:0!important;min-height:0!important;flex:0 0 auto;box-shadow:0 0 65px #e0d8ff28,0 0 150px #ff67901c;background:transparent!important;animation:none!important}
+#moonStage .moon img{object-fit:contain!important;filter:contrast(1.1) brightness(1.08)}
+#moonStage .moon-halo{width:82vmin;height:82vmin;left:50%;top:50%;transform:translate(-50%,-50%)}
+#moonStage .moon-caption{position:absolute;top:calc(50% + min(38vmin,400px) + 14px);margin:0;text-shadow:0 2px 8px #000}
+.hero{min-height:78vh!important;pointer-events:none}
+.hero-copy{pointer-events:auto}
+.shell{position:relative;z-index:1}
+.player,.library{background:rgba(6,8,17,.66)!important;backdrop-filter:blur(9px);-webkit-backdrop-filter:blur(9px);border-color:#ffffff3b}
+.player{margin-top:0}
+header{background:rgba(6,8,17,.56)}
+@media(max-width:800px){#moonStage .moon{width:min(88vw,75vh)!important;height:min(88vw,75vh)!important}#moonStage .moon-caption{top:calc(50% + min(44vw,37.5vh) + 14px)}.hero{min-height:78vh!important}}
+
+/* v0.5: remove false full-circle lunar rim. Moonlight is determined by JS terminator only. */
+#moonStage .moon{box-shadow:none!important;outline:none!important;border:none!important;}
+#moonStage .moon-halo{opacity:.22;filter:blur(34px);}
+#moonStage .moon img{filter:none!important;}
+#moonStage .moon canvas{pointer-events:none;}
+
+/* v0.6: moon texture and shading now share the same canvas silhouette. */
+#moonStage .moon canvas{object-fit:contain;display:block;}
