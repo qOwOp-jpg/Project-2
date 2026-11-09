@@ -189,3 +189,15 @@ void main(){
 function bandAverage(lo,hi){if(!frequency||!ctx)return 0;const hz=ctx.sampleRate/analyser.fftSize;const a=Math.max(0,Math.floor(lo/hz)),b=Math.min(frequency.length,Math.ceil(hi/hz));let sum=0;for(let i=a;i<b;i++)sum+=frequency[i];return b>a?sum/(b-a)/255:0}
 let start=performance.now();function animate(now){if(analyser&&!audio.paused){analyser.getByteFrequencyData(frequency);metrics.bass+=(bandAverage(25,180)-metrics.bass)*.25;metrics.mid+=(bandAverage(180,2000)-metrics.mid)*.25;metrics.treble+=(bandAverage(2000,9000)-metrics.treble)*.25}else for(const k in metrics)metrics[k]*=.92;for(const k of ['bass','mid','treble'])$(k+'Bar').style.width=(metrics[k]*100).toFixed(1)+'%';if(gl){const dpr=Math.min(devicePixelRatio||1,1.5),w=Math.floor(innerWidth*dpr),h=Math.floor(innerHeight*dpr);if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;gl.viewport(0,0,w,h)}gl.useProgram(shaderProgram);gl.uniform2f(uniforms.resolution,w,h);gl.uniform1f(uniforms.time,(now-start)/1000);gl.uniform1f(uniforms.bass,clamp(metrics.bass*reactivity));gl.uniform1f(uniforms.mid,clamp(metrics.mid*reactivity));gl.uniform1f(uniforms.treble,clamp(metrics.treble*reactivity));gl.uniform1f(uniforms.illum,lunar.illumination/100);gl.uniform1f(uniforms.phase,lunar.phase);gl.drawArrays(gl.TRIANGLES,0,6)}drawRadialSpectrum(now);requestAnimationFrame(animate)}
 loadMoon();drawMoon();requestAnimationFrame(animate);
+
+// v1.1: expand controls on desktop, collapse them by default on mobile.
+(function () {
+  const panel = document.querySelector('.mobile-lunar-controls');
+  if (!panel) return;
+  const desktop = window.matchMedia('(min-width: 801px)');
+  function syncPanel() {
+    panel.open = desktop.matches;
+  }
+  syncPanel();
+  desktop.addEventListener?.('change', syncPanel);
+})();

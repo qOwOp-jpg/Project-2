@@ -71,3 +71,37 @@ header{background:rgba(6,8,17,.56)}
 .phase-timeline-buttons button span{font-size:20px;line-height:1.2;}
 .phase-timeline-buttons button:hover,.phase-timeline-buttons button.selected{border-color:#b8e8f2;color:#b8e8f2;background:#b8e8f21a;}
 @media(max-width:800px){#radialSpectrum{width:min(72vw,62vh);height:min(72vw,62vh);}}
+
+/* v1.0 responsive collapsible lunar controls; desktop stays expanded */
+.mobile-lunar-controls{display:contents;}
+.mobile-lunar-controls>summary{display:none;}
+.mobile-lunar-content{display:contents;}
+@media(max-width:800px){
+  .hero-copy{padding:12px 14px!important;}
+  .hero h1{font-size:clamp(20px,5.5vw,28px)!important;line-height:1.05!important;margin:6px 0!important;}
+  .hero-copy>p{font-size:10px!important;margin:5px 0!important;}
+  .stats{gap:12px!important;margin-top:9px!important;}
+  .stats small{font-size:8px;letter-spacing:.7px;}
+  .stats strong{font-size:13px;}
+  .date-control{margin-top:9px!important;font-size:9px;}
+  .date-control input{padding:5px;font-size:12px;}
+  .mobile-lunar-controls{display:block;border-top:1px solid #ffffff30;margin-top:11px;}
+  .mobile-lunar-controls>summary{display:flex;align-items:center;justify-content:space-between;gap:10px;list-style:none;cursor:pointer;color:#b8e8f2;font:10px monospace;letter-spacing:1px;padding:11px 2px 3px;}
+  .mobile-lunar-controls>summary::-webkit-details-marker{display:none;}
+  .mobile-lunar-controls>summary:focus-visible{outline:2px solid #ffbc54;outline-offset:3px;}
+  .expand-symbol{font-size:18px;line-height:1;transition:transform .2s;}
+  .mobile-lunar-controls[open] .expand-symbol{transform:rotate(180deg);}
+  .mobile-lunar-content{display:block;padding-bottom:3px;}
+  .mobile-lunar-controls:not([open]) .mobile-lunar-content{display:none;}
+  .phase-timeline{margin-top:10px;}
+  .reactivity-control{margin-top:9px;}
+  .api-link{font-size:9px!important;overflow-wrap:anywhere;}
+}
+
+
+/* v1.1 fix: desktop must not hide details contents when closed */
+@media (min-width:801px) {
+  .mobile-lunar-controls {display:block;}
+  .mobile-lunar-controls > summary {display:none;}
+  .mobile-lunar-content {display:block;}
+}
