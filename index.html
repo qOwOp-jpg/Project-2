@@ -1,11 +1,134 @@
-<!doctype html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#080910"><title>The Not So Dark Side of the Moon</title><link rel="stylesheet" href="style.css"></head><body>
-<canvas id="swirl" aria-hidden="true"></canvas><div class="grain" aria-hidden="true"></div><main class="shell">
-<header><div class="eyebrow">LUNAR AUDIO EXPERIMENT <span class="dot">✦</span> DATA-DRIVEN EXPERIENCE</div><div class="header-right"><span id="apiStatus">MOON DATA: CONNECTING</span><button id="refreshMoon" title="Refresh lunar data">↻</button></div></header>
-<section class="hero"><div class="hero-copy"><div class="tag">SIDE A / THE LISTENING ROOM</div><h1>THE NOT SO<br><em>DARK</em> SIDE<br>OF THE MOON<span class="period">.</span></h1><p>Sound moves the spectrum. The moon changes the light.</p><div class="stats"><div><small>MOON PHASE</small><strong id="phaseName">Loading…</strong></div><div><small>ILLUMINATION</small><strong id="illumination">—</strong></div><div><small>MOONRISE</small><strong id="moonrise">—</strong></div></div><label class="date-control">EXPLORE DATE <input id="moonDate" type="date"></label><details class="mobile-lunar-controls" open><summary><span>LUNAR CONTROLS &amp; AUDIO SETTINGS</span><span class="expand-symbol" aria-hidden="true">⌄</span></summary><div class="mobile-lunar-content"><div class="phase-timeline" aria-label="Moon phase shortcuts"><div class="phase-timeline-title">EXPLORE LUNAR CYCLE <span>APPROXIMATE DATES</span></div><div class="phase-timeline-buttons"><button type="button" data-phase-target="0" title="Nearest new moon"><span>●</span>NEW</button><button type="button" data-phase-target="0.25" title="Nearest first quarter"><span>◐</span>FIRST</button><button type="button" data-phase-target="0.5" title="Nearest full moon"><span>○</span>FULL</button><button type="button" data-phase-target="0.75" title="Nearest last quarter"><span>◑</span>LAST</button></div></div><div class="reactivity-control"><label for="reactivity">AUDIO REACTIVITY</label><input id="reactivity" type="range" min="0" max="200" step="5" value="100" aria-label="Audio reactivity intensity"><output id="reactivityValue" for="reactivity">100%</output></div><p class="api-link">Lunar data: <a href="https://sunrisesunset.io" target="_blank" rel="noopener">Powered by SunriseSunset.io</a> <span id="locationLabel">• Mississauga (default)</span></p></div></details></div>
-<div class="moon-area" id="moonStage"><div class="moon-halo"></div><div id="moon" class="moon"><img src="assets/moon.png" alt="Textured full moon"><canvas id="shadow" aria-hidden="true"></canvas></div><canvas id="radialSpectrum" aria-label="Rotating circular audio spectrum" role="img"></canvas><span class="moon-caption">THE MOON IS LISTENING</span></div></section>
-<section class="player"><div class="player-top"><div><div class="tag">SIDE B / YOUR SOUNDTRACK</div><h2 id="trackTitle">No track selected</h2><p id="trackArtist">Drop audio files to begin</p></div><div class="mode"><button id="shuffle" aria-label="Toggle shuffle" title="Shuffle">⇄</button><button id="repeat" aria-label="Toggle repeat" title="Repeat mode">↻</button></div></div>
-<div class="transport"><button id="prev" aria-label="Previous track">⏮</button><button id="play" class="play" aria-label="Play">▶</button><button id="next" aria-label="Next track">⏭</button><span id="currentTime">0:00</span><input id="seek" type="range" min="0" max="1000" value="0" aria-label="Seek"><span id="duration">0:00</span><span class="volume-icon">VOL</span><input id="volume" type="range" min="0" max="1" step=".01" value=".8" aria-label="Volume"></div>
-<div class="meters"><div><span>BASS</span><i id="bassBar"></i></div><div><span>MID</span><i id="midBar"></i></div><div><span>TREBLE</span><i id="trebleBar"></i></div></div></section>
-<section class="library"><div class="library-head"><h2>YOUR ORBIT <span id="count">00</span></h2><div class="library-actions"><button id="addFiles">+ ADD FILES</button><button id="addUrl">+ AUDIO URL</button><button id="clear">CLEAR</button></div></div><div id="dropZone" class="drop-zone"><strong>DROP YOUR AUDIO INTO ORBIT</strong><span>MP3, WAV, OGG, M4A, FLAC (browser support varies) • Drag songs to reorder</span></div><ol id="playlist" class="playlist"></ol><p class="note">Local audio stays in your browser session. Direct audio URLs must allow cross-origin access for visualization. YouTube/Spotify page links are not direct audio files.</p></section>
-<footer>THE NOT SO DARK SIDE OF THE MOON <span>✦</span> MADE OF SOUND AND LIGHT</footer></main>
-<input id="fileInput" type="file" accept="audio/*,.mp3,.wav,.ogg,.m4a,.flac" multiple hidden><audio id="audio" preload="metadata" crossorigin="anonymous"></audio><script src="app.js"></script></body></html>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="theme-color" content="#080910">
+    <title>The Not So Dark Side of the Moon</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <canvas id="swirl" aria-hidden="true"></canvas>
+    <div class="grain" aria-hidden="true"></div>
+    <main class="shell">
+      <header>
+        <div class="eyebrow">LUNAR AUDIO EXPERIMENT <span class="dot">✦</span> DATA-DRIVEN EXPERIENCE</div>
+        <div class="header-right">
+          <span id="apiStatus">MOON DATA: CONNECTING</span>
+          <button id="refreshMoon" title="Refresh lunar data">↻</button>
+        </div>
+      </header>
+      <section class="hero">
+        <div class="hero-copy">
+          <div class="tag">SIDE A / THE LISTENING ROOM</div>
+          <h1>THE NOT SO<br><em>DARK</em> SIDE<br>OF THE MOON<span class="period">.</span></h1>
+          <p>Sound moves the spectrum. The moon changes the light.</p>
+          <div class="stats">
+            <div>
+              <small>MOON PHASE</small>
+              <strong id="phaseName">Loading…</strong>
+            </div>
+            <div>
+              <small>ILLUMINATION</small>
+              <strong id="illumination">—</strong>
+            </div>
+            <div>
+              <small>MOONRISE</small>
+              <strong id="moonrise">—</strong>
+            </div>
+          </div>
+          <label class="date-control">EXPLORE DATE <input id="moonDate" type="date"></label>
+          <details class="mobile-lunar-controls" open>
+            <summary>
+              <span>LUNAR CONTROLS &amp; AUDIO SETTINGS</span>
+              <span class="expand-symbol" aria-hidden="true">⌄</span>
+            </summary>
+            <div class="mobile-lunar-content">
+              <div class="phase-timeline" aria-label="Moon phase shortcuts">
+                <div class="phase-timeline-title">EXPLORE LUNAR CYCLE <span>APPROXIMATE DATES</span></div>
+                <div class="phase-timeline-buttons">
+                  <button type="button" data-phase-target="0" title="Nearest new moon"><span>●</span>NEW</button>
+                  <button type="button" data-phase-target="0.25" title="Nearest first quarter"><span>◐</span>FIRST</button>
+                  <button type="button" data-phase-target="0.5" title="Nearest full moon"><span>○</span>FULL</button>
+                  <button type="button" data-phase-target="0.75" title="Nearest last quarter"><span>◑</span>LAST</button>
+                </div>
+              </div>
+              <div class="reactivity-control">
+                <label for="reactivity">AUDIO REACTIVITY</label>
+                <input id="reactivity" type="range" min="0" max="200" step="5" value="100" aria-label="Audio reactivity intensity">
+                <output id="reactivityValue" for="reactivity">100%</output>
+              </div>
+              <p class="api-link">Lunar data: <a href="https://sunrisesunset.io" target="_blank" rel="noopener">Powered by SunriseSunset.io</a> <span id="locationLabel">• Mississauga (default)</span></p>
+            </div>
+          </details>
+        </div>
+        <div class="moon-area" id="moonStage">
+          <div class="moon-halo"></div>
+          <div id="moon" class="moon">
+            <img src="assets/moon.png" alt="Textured full moon">
+            <canvas id="shadow" aria-hidden="true"></canvas>
+          </div>
+          <canvas id="radialSpectrum" aria-label="Rotating circular audio spectrum" role="img"></canvas>
+          <span class="moon-caption">THE MOON IS LISTENING</span>
+        </div>
+      </section>
+      <section class="player">
+        <div class="player-top">
+          <div>
+            <div class="tag">SIDE B / YOUR SOUNDTRACK</div>
+            <h2 id="trackTitle">No track selected</h2>
+            <p id="trackArtist">Drop audio files to begin</p>
+          </div>
+          <div class="mode">
+            <button id="shuffle" aria-label="Toggle shuffle" title="Shuffle">⇄</button>
+            <button id="repeat" aria-label="Toggle repeat" title="Repeat mode">↻</button>
+          </div>
+        </div>
+        <div class="transport">
+          <button id="prev" aria-label="Previous track">⏮</button>
+          <button id="play" class="play" aria-label="Play">▶</button>
+          <button id="next" aria-label="Next track">⏭</button>
+          <span id="currentTime">0:00</span>
+          <input id="seek" type="range" min="0" max="1000" value="0" aria-label="Seek">
+          <span id="duration">0:00</span>
+          <span class="volume-icon">VOL</span>
+          <input id="volume" type="range" min="0" max="1" step=".01" value=".8" aria-label="Volume">
+        </div>
+        <div class="meters">
+          <div>
+            <span>BASS</span>
+            <i id="bassBar"></i>
+          </div>
+          <div>
+            <span>MID</span>
+            <i id="midBar"></i>
+          </div>
+          <div>
+            <span>TREBLE</span>
+            <i id="trebleBar"></i>
+          </div>
+        </div>
+      </section>
+      <section class="library">
+        <div class="library-head">
+          <h2>YOUR ORBIT <span id="count">00</span></h2>
+          <div class="library-actions">
+            <button id="addFiles">+ ADD FILES</button>
+            <button id="addUrl">+ AUDIO URL</button>
+            <button id="clear">CLEAR</button>
+          </div>
+        </div>
+        <div id="dropZone" class="drop-zone">
+          <strong>DROP YOUR AUDIO INTO ORBIT</strong>
+          <span>MP3, WAV, OGG, M4A, FLAC (browser support varies) • Drag songs to reorder</span>
+        </div>
+        <ol id="playlist" class="playlist"></ol>
+        <p class="note">Local audio stays in your browser session. Direct audio URLs must allow cross-origin access for visualization. YouTube/Spotify page links are not direct audio files.</p>
+      </section>
+      <footer>THE NOT SO DARK SIDE OF THE MOON <span>✦</span> MADE OF SOUND AND LIGHT</footer>
+    </main>
+    <input id="fileInput" type="file" accept="audio/*,.mp3,.wav,.ogg,.m4a,.flac" multiple hidden>
+    <audio id="audio" preload="metadata" crossorigin="anonymous"></audio>
+    <script src="app.js"></script>
+  </body>
+</html>
