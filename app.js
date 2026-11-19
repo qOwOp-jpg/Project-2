@@ -244,7 +244,7 @@ $('fileInput').onchange = e => {
   e.target.value = ''
 };
 $('addUrl').onclick = () => {
-  const raw = prompt('Enter a direct HTTPS audio file URL (not a YouTube or Spotify page):');
+  const raw = prompt('Please enter a direct URL to an audio file (e.g., .mp3, .wav, .ogg, or .m4a). \n\nThe link must point directly to a playable audio file, NOT a webpage, video, or streaming platform link (such as YouTube, Spotify, or Bilibili). :( \n\nThe audio file must be publicly accessible and allow playback from this website.');
   if (!raw) return;
   let u;
   try {
