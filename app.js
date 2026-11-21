@@ -24,8 +24,15 @@ $('reactivity').addEventListener('input', e => {
 const spectrumCanvas = $('radialSpectrum'),
   spectrumCtx = spectrumCanvas.getContext('2d');
 let spectrumLevels = new Float32Array(96);
+const spectrumToggle = $('spectrumToggle');
+spectrumToggle.addEventListener('change', () => {
+  spectrumCanvas.hidden = !spectrumToggle.checked;
+  $('spectrumToggleState').textContent = spectrumToggle.checked ? 'ON' : 'OFF';
+  if (!spectrumToggle.checked) spectrumLevels.fill(0);
+});
 
 function drawRadialSpectrum(now) {
+  if (!spectrumToggle.checked) return;
   const dpr = Math.min(devicePixelRatio || 1, 2),
     rect = spectrumCanvas.getBoundingClientRect();
   if (!rect.width || !rect.height) return;

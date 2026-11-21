@@ -786,6 +786,32 @@ header {
   filter:drop-shadow(0 0 3px rgba(0,0,0,.35));
 }
 
+.spectrum-control {
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-top:12px;
+  font:9px monospace;
+  letter-spacing:1px;
+  color:#f6bd65;
+  cursor:pointer;
+}
+
+.spectrum-control input {
+  margin-left:auto;
+  accent-color:#b8e8f2;
+  cursor:pointer;
+}
+
+.spectrum-control span {
+  min-width:3ch;
+  color:#f5f0e8;
+}
+
+#radialSpectrum[hidden] {
+  display:none;
+}
+
 .reactivity-control {
   display:flex;
   align-items:center;
